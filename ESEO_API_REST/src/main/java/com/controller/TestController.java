@@ -38,7 +38,6 @@ public class TestController {
 				Ville ville = new Ville();
 				ville.fill(rset);
 				villes.add(ville);
-				System.out.println(ville.getNom_commune());
 			}
 			return villes;
 		} catch (SQLException e) {
