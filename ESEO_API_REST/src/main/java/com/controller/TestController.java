@@ -88,7 +88,21 @@ public class TestController {
 				sql += "Longitute='" + longitude + "' AND ";
 			sql = sql.substring(0, sql.length() - 4);
 			test = stm.executeUpdate("UPDATE ville_france SET " + sql + "WHERE Code_commune_INSEE='" + id + "'");
-		} catch (SQLException e ) {
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return test;
+	}
+	
+	@RequestMapping(value="/DeleteVille", method=RequestMethod.GET)
+	@ResponseBody
+	public int delete(@RequestParam(required = true, value="id") String id) {
+		int test = -1;
+		try {
+			Connection connect = Config.Connexion("maven", "Admin", "network");
+			Statement stm = connect.createStatement();
+			test = stm.executeUpdate("DELETE FROM `ville_france` WHERE Code_commune_INSEE='" + id +"'");
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return test;
