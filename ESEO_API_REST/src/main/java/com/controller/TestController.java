@@ -26,14 +26,19 @@ public class TestController {
 		return value;
 	}
 	
-	@RequestMapping(value="/allVille", method=RequestMethod.GET)
+	@RequestMapping(value="/Ville", method=RequestMethod.GET)
 	@ResponseBody
-	public List<Ville> get() {
+	public List<Ville> get1(@RequestParam(required = false, value="name") String value) {
 		List<Ville> villes = new ArrayList<Ville>();
 		try {
 			Connection connect = Config.Connexion("maven", "Admin", "network");
 			Statement stm = connect.createStatement();
-			ResultSet rset = stm.executeQuery("SELECT * FROM ville_france");
+			ResultSet rset;
+			if (value != null)
+				rset = stm.executeQuery("SELECT * FROM ville_france WHERE Nom_commune LIKE '%" + value.toUpperCase() + "%'");
+			else 
+				rset = stm.executeQuery("SELECT * FROM ville_france");
+				
 			while (rset.next()) {
 				Ville ville = new Ville();
 				ville.fill(rset);
