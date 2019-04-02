@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -49,6 +50,20 @@ public class TestController {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@RequestMapping(value="/CreateVille", method=RequestMethod.GET)
+	@ResponseBody
+	public int post(@RequestParam(required = true, value="id") String id, @RequestParam(required = true, value="name") String name, @RequestParam(required = true, value="code") String code, @RequestParam(required = true, value="libelle") String libelle, @RequestParam(required = true, value="ligne") String ligne, @RequestParam(required = true, value="latitude") String latitude, @RequestParam(required = true, value="longitude") String longitude) {	
+		int test = -1;
+		try {
+			Connection connect = Config.Connexion("maven", "Admin", "network");
+			Statement stm = connect.createStatement();
+			test = stm.executeUpdate("INSERT INTO `ville_france`(`Code_commune_INSEE`, `Nom_commune`, `Code_postal`, `Libelle_acheminement`, `Ligne_5`, `Latitude`, `Longitude`) VALUES ('" + id + "', '" + name + "', '" + code + "', '" + libelle + "', '" + ligne + "', '" + latitude + "', '" + longitude + "')");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return test;
 	}
 	
 }
