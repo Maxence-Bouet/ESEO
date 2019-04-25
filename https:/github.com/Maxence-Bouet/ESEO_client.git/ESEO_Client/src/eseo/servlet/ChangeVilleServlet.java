@@ -61,6 +61,7 @@ public class ChangeVilleServlet extends HttpServlet {
 			
 			DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
 			writer.write(json.getBytes());
+			writer.close();
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
