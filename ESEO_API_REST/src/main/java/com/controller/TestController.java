@@ -134,7 +134,7 @@ public class TestController {
 //			e.printStackTrace();
 //		}
 //		return test;
-		int test = -1;
+		int test = 0;
 		System.out.println("passed");
 		try {
 			Connection connect = Config.Connexion("maven", "Admin", "network");
