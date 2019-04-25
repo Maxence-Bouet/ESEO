@@ -1,13 +1,14 @@
 package com.controller;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +32,7 @@ public class TestController {
 	@ResponseBody
 	public List<Ville> get1(@RequestParam(required = false, value="name") String value) {
 		List<Ville> villes = new ArrayList<Ville>();
+		System.out.println("passed");
 		try {
 			Connection connect = Config.Connexion("maven", "Admin", "network");
 			Statement stm = connect.createStatement();
@@ -52,41 +54,42 @@ public class TestController {
 		return null;
 	}
 	
-	@RequestMapping(value="/CreateVille", method=RequestMethod.GET)
-	@ResponseBody
-	public int put(@RequestParam(required = true, value="id") String id, @RequestParam(required = true, value="name") String name, @RequestParam(required = true, value="code") String code, @RequestParam(required = true, value="libelle") String libelle, @RequestParam(required = true, value="ligne") String ligne, @RequestParam(required = true, value="latitude") String latitude, @RequestParam(required = true, value="longitude") String longitude) {	
-		int test = -1;
-		try {
-			Connection connect = Config.Connexion("maven", "Admin", "network");
-			Statement stm = connect.createStatement();
-			test = stm.executeUpdate("INSERT INTO `ville_france`(`Code_commune_INSEE`, `Nom_commune`, `Code_postal`, `Libelle_acheminement`, `Ligne_5`, `Latitude`, `Longitude`) VALUES ('" + id + "', '" + name + "', '" + code + "', '" + libelle + "', '" + ligne + "', '" + latitude + "', '" + longitude + "')");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return test;
-	}
+//	@RequestMapping(value="/CreateVille", method=RequestMethod.GET)
+//	@ResponseBody
+//	public int put(@RequestParam(required = true, value="id") String id, @RequestParam(required = true, value="name") String name, @RequestParam(required = true, value="code") String code, @RequestParam(required = true, value="libelle") String libelle, @RequestParam(required = true, value="ligne") String ligne, @RequestParam(required = true, value="latitude") String latitude, @RequestParam(required = true, value="longitude") String longitude) {	
+//		int test = -1;
+//		try {
+//			Connection connect = Config.Connexion("maven", "Admin", "network");
+//			Statement stm = connect.createStatement();
+//			test = stm.executeUpdate("INSERT INTO `ville_france`(`Code_commune_INSEE`, `Nom_commune`, `Code_postal`, `Libelle_acheminement`, `Ligne_5`, `Latitude`, `Longitude`) VALUES ('" + id + "', '" + name + "', '" + code + "', '" + libelle + "', '" + ligne + "', '" + latitude + "', '" + longitude + "')");
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return test;
+//	}
 	
 	@RequestMapping(value="/ChangeVille", method=RequestMethod.GET)
 	@ResponseBody
-	public int post(@RequestParam(required = true, value="id") String id, @RequestParam(required = false, value="name") String name, @RequestParam(required = false, value="code") String code, @RequestParam(required = false, value="libelle") String libelle, @RequestParam(required = false, value="ligne") String ligne, @RequestParam(required = false, value="latitude") String latitude, @RequestParam(required = false, value="longitude") String longitude) {
+	public int post(@RequestParam(required = true, value="id") String id, @RequestParam(required = true, value="name") String name, @RequestParam(required = true, value="code") String code, @RequestParam(required = true, value="libelle") String libelle, @RequestParam(required = true, value="ligne") String ligne, @RequestParam(required = true, value="latitude") String latitude, @RequestParam(required = true, value="longitude") String longitude) {
 		int test = -1;
+		System.out.println("passed");
 		try {
 			Connection connect = Config.Connexion("maven", "Admin", "network");
 			Statement stm = connect.createStatement();
 			String sql = "";
 			if (name != null)
-				sql += "Nom_commune='" + name + "' AND ";
+				sql += "Nom_commune='" + name + "' ,";
 			if (code != null)
-				sql += "Code_postal='" + code + "' AND ";
+				sql += "Code_postal='" + code + "' ,";
 			if (libelle != null)
-				sql += "Libelle_acheminement='" + libelle + "' AND ";
+				sql += "Libelle_acheminement='" + libelle + "' ,";
 			if (ligne != null)
-				sql += "Ligne_5='" + ligne + "' AND ";
+				sql += "Ligne_5='" + ligne + "' ,";
 			if (latitude != null)
-				sql += "Latitude='" + latitude + "' AND ";
+				sql += "Latitude='" + latitude + "' ,";
 			if (longitude != null)
-				sql += "Longitute='" + longitude + "' AND ";
-			sql = sql.substring(0, sql.length() - 4);
+				sql += "Longitude='" + longitude + "' ,";
+			sql = sql.substring(0, sql.length()-1);
 			test = stm.executeUpdate("UPDATE ville_france SET " + sql + "WHERE Code_commune_INSEE='" + id + "'");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -108,4 +111,28 @@ public class TestController {
 		return test;
 	}
 	
+	@PostMapping(path="/TestPost", consumes = "application/json", produces = "application/json")
+	public String test(@RequestBody Ville v) {
+		String test = "";
+		Ville ville = new Ville();
+		ville = v;
+		test = ville.getNom_commune();
+		return test;
+	}
+	
+	@PostMapping(path="/CreateVille", consumes = "application/json", produces = "application/json")
+	public int post(@RequestBody Ville v) {
+		int test = -1;
+		Ville ville = new Ville();
+		ville = v;
+		try {
+			Connection connect = Config.Connexion("maven", "Admin", "network");
+			Statement stm = connect.createStatement();
+			System.out.println("passed API Rest");
+			test = stm.executeUpdate("INSERT INTO `ville_france`(`Code_commune_INSEE`, `Nom_commune`, `Code_postal`, `Libelle_acheminement`, `Ligne_5`, `Latitude`, `Longitude`) VALUES ('" + ville.getCode_commune_INSEE() + "', '" + ville.getNom_commune() + "', '" + ville.getCode_postal() + "', '" + ville.getLibelle_acheminement() + "', '" + ville.getLigne_5() + "', '" + ville.getLatitude() + "', '" + ville.getLongitude() + "')");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return test;
+	}
 }

@@ -10,6 +10,11 @@ public class IndexController {
  
     @RequestMapping("/")
     public String home(Map<String, Object> model) {
+    	//URL url = new URL("http://localhost:8181");
+    	
+    	
+    	model.put("testing", "It's working");
+    	
         model.put("message", "HowToDoInJava Reader !!");
         return "index";
     }
