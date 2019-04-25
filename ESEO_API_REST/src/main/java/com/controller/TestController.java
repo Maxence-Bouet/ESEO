@@ -122,14 +122,38 @@ public class TestController {
 	
 	@PostMapping(path="/CreateVille", consumes = "application/json", produces = "application/json")
 	public int post(@RequestBody Ville v) {
+//		int test = -1;
+//		Ville ville = new Ville();
+//		ville = v;
+//		try {
+//			Connection connect = Config.Connexion("maven", "Admin", "network");
+//			Statement stm = connect.createStatement();
+//			System.out.println("passed API Rest");
+//			test = stm.executeUpdate("INSERT INTO `ville_france`(`Code_commune_INSEE`, `Nom_commune`, `Code_postal`, `Libelle_acheminement`, `Ligne_5`, `Latitude`, `Longitude`) VALUES ('" + ville.getCode_commune_INSEE() + "', '" + ville.getNom_commune() + "', '" + ville.getCode_postal() + "', '" + ville.getLibelle_acheminement() + "', '" + ville.getLigne_5() + "', '" + ville.getLatitude() + "', '" + ville.getLongitude() + "')");
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return test;
 		int test = -1;
-		Ville ville = new Ville();
-		ville = v;
+		System.out.println("passed");
 		try {
 			Connection connect = Config.Connexion("maven", "Admin", "network");
 			Statement stm = connect.createStatement();
-			System.out.println("passed API Rest");
-			test = stm.executeUpdate("INSERT INTO `ville_france`(`Code_commune_INSEE`, `Nom_commune`, `Code_postal`, `Libelle_acheminement`, `Ligne_5`, `Latitude`, `Longitude`) VALUES ('" + ville.getCode_commune_INSEE() + "', '" + ville.getNom_commune() + "', '" + ville.getCode_postal() + "', '" + ville.getLibelle_acheminement() + "', '" + ville.getLigne_5() + "', '" + ville.getLatitude() + "', '" + ville.getLongitude() + "')");
+			String sql = "";
+			if (v.getNom_commune() != null)
+				sql += "Nom_commune='" + v.getNom_commune() + "' ,";
+			if (v.getCode_postal() != null)
+				sql += "Code_postal='" + v.getCode_postal() + "' ,";
+			if (v.getLibelle_acheminement() != null)
+				sql += "Libelle_acheminement='" + v.getLibelle_acheminement() + "' ,";
+			if (v.getLigne_5() != null)
+				sql += "Ligne_5='" + v.getLigne_5() + "' ,";
+			if (v.getLatitude() != null)
+				sql += "Latitude='" + v.getLatitude() + "' ,";
+			if (v.getLongitude() != null)
+				sql += "Longitude='" + v.getLongitude() + "' ,";
+			sql = sql.substring(0, sql.length()-1);
+			test = stm.executeUpdate("UPDATE ville_france SET " + sql + "WHERE Code_commune_INSEE='" + v.getCode_commune_INSEE() + "'");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
